@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SockPod</title>
+  <meta name="description" content="Live stats and session history from your SockPod.">
+  <meta name="theme-color" content="#0b1220">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2314b8a6'/><path d='M11 6h8v11c0 3 2 4 4 5s2 5-2 5h-6c-3 0-4-2-4-5z' fill='white'/></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M11 6h8v11c0 3 2 4 4 5s2 5-2 5h-6c-3 0-4-2-4-5z"/></svg>
+      SockPod
+    </div>
+    <div id="conn" class="pill" data-state="disconnected" role="status" aria-live="polite">Not connected</div>
+  </header>
+
+  <main>
+    <!-- Shown until a pod (or the demo) is connected -->
+    <section id="connect-card" class="card connect">
+      <h1>Connect your SockPod</h1>
+      <p class="muted">Switch the pod on, keep it within a few metres, then connect over Bluetooth.</p>
+      <div class="actions">
+        <button id="btn-connect" class="btn btn-primary" type="button">Connect SockPod</button>
+        <button id="btn-demo" class="btn" type="button">Try the demo</button>
+      </div>
+      <p id="connect-note" class="note" hidden></p>
+    </section>
+
+    <!-- Live view -->
+    <section id="live" hidden>
+      <div class="card hero">
+        <div class="hero-text">
+          <div id="rec-state" class="rec-state" data-rec="0"><span class="dot" aria-hidden="true"></span><span id="rec-label">Ready</span></div>
+          <div id="timer" class="timer">0:00</div>
+          <div class="muted"><span id="active">0:00</span> active · <span id="rest">0:00</span> rest</div>
+        </div>
+        <button id="btn-session" class="btn btn-primary btn-big" type="button">Start session</button>
+      </div>
+
+      <div class="grid">
+        <article class="card stat">
+          <h3>Steps</h3>
+          <div class="value"><span id="steps">0</span></div>
+          <div class="sub" id="steps-sub">&nbsp;</div>
+        </article>
+        <article class="card stat">
+          <h3>Cadence</h3>
+          <div class="value"><span id="cad">0</span><small>steps/min</small></div>
+          <div class="sub" id="cad-sub">Not moving</div>
+        </article>
+        <article class="card stat">
+          <h3>Intensity</h3>
+          <div class="value"><span id="zone">Rest</span></div>
+          <div class="meter" id="zone-meter" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="sub" id="enmo-sub">&nbsp;</div>
+        </article>
+        <article class="card stat">
+          <h3>Jumps</h3>
+          <div class="value"><span id="jumps">0</span></div>
+          <div class="sub" id="jumps-sub">No jumps yet</div>
+        </article>
+        <article class="card stat">
+          <h3>Sprints</h3>
+          <div class="value"><span id="sprints">0</span></div>
+          <div class="sub">3 s or more at full speed</div>
+        </article>
+        <article class="card stat">
+          <h3>Elevation</h3>
+          <div class="value" id="elev-value"><span id="elev-up">0.0</span><small>m up</small></div>
+          <div class="sub" id="elev-sub">&nbsp;</div>
+        </article>
+      </div>
+
+      <div class="actions end">
+        <button id="btn-disconnect" class="btn btn-ghost" type="button">Disconnect</button>
+      </div>
+    </section>
+
+    <!-- Saved sessions -->
+    <section class="card history">
+      <div class="history-head">
+        <h2>Sessions</h2>
+        <div class="actions">
+          <button id="btn-export" class="btn btn-small" type="button">Export</button>
+          <button id="btn-clear" class="btn btn-small btn-ghost" type="button">Clear</button>
+        </div>
+      </div>
+      <p id="history-empty" class="muted">Finished sessions appear here. They're saved in this browser.</p>
+      <ul id="history-list" class="history-list"></ul>
+    </section>
+  </main>
+</body>
+</html>
