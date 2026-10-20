@@ -285,6 +285,7 @@ SockPod/SockPod.ino    firmware
 serial_tool.py         talk to the board over USB serial without an interactive monitor
 motion_test.py         guided motion test for tuning the thresholds
 ble_test.py            checks the pod's Bluetooth interface (see Testing)
+jira/                  Jira import file: work items and test cases
 motion_logs/           recordings from the motion tests
 frontend/              the SockPod web app (index.html, app.js, ble.js, demo.js, styles.css)
 .github/workflows/     publishes frontend/ to GitHub Pages
@@ -337,4 +338,6 @@ python serial_tool.py COM7 --reset -s 10
   <https://vaibhavraj-0906.github.io/sockpod/> and tested there in demo mode,
   including the phone layout. See [Testing](#testing).
 - **Future update:** using the app from an Android phone.
-- **Project tracking:** Jira (project link to be added).
+- **Project tracking:** Jira at <https://sockpod.atlassian.net> (members only).
+  `jira/sockpod-jira-import.csv` holds the epics, stories, open work and every
+  test case with its result, ready for Jira's CSV import.
