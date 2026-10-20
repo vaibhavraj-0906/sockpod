@@ -338,6 +338,10 @@ python serial_tool.py COM7 --reset -s 10
   <https://vaibhavraj-0906.github.io/sockpod/> and tested there in demo mode,
   including the phone layout. See [Testing](#testing).
 - **Future update:** using the app from an Android phone.
-- **Project tracking:** Jira at <https://sockpod.atlassian.net> (members only).
-  `jira/sockpod-jira-import.csv` holds the epics, stories, open work and every
-  test case with its result, ready for Jira's CSV import.
+- **Project tracking:** Jira at <https://sockpod.atlassian.net> (members only),
+  project `SCRUM`, work items SCRUM-5 to SCRUM-79: 8 epics, the finished work,
+  the open work (Android phone support, accuracy and clean-up), and all 36
+  test cases with their results
+  ([test cases](https://sockpod.atlassian.net/issues?jql=project%20%3D%20SCRUM%20AND%20labels%20%3D%20test-case)).
+  `jira/sockpod-jira-import.csv` is the same set as a CSV, for re-importing into
+  another Jira project.
