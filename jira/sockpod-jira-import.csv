@@ -1,4 +1,4 @@
-Issue ID,Parent,Issue Type,Summary,Description,Status,Labels,Labels,Labels
+Work item ID,Parent,Work type,Summary,Description,Status,Labels,Labels,Labels
 1,,Epic,Pod hardware and firmware,ESP32 DevKit + accelerometer on the sock. Firmware: SockPod/SockPod.ino (esp32:esp32 3.0.7).,Done,,,
 2,,Epic,Bluetooth LE interface,"GATT service a8f5c3e0-6d2b-4f1a-9c7e-3b5d8e2f1a00 with Live, Session and Control characteristics. See README.",Done,,,
 3,,Epic,Motion tuning,"Thresholds set from two guided on-the-spot motion tests on 2026-10-19 (motion_test.py, motion_logs/).",Done,,,
@@ -7,178 +7,178 @@ Issue ID,Parent,Issue Type,Summary,Description,Status,Labels,Labels,Labels
 6,,Epic,Testing,Test cases and results. Bluetooth: ble_test.py. Serial: serial_tool.py. Web app: hosted copy in demo mode.,Done,,,
 7,,Epic,Android phone support,Planned for a future update.,To Do,future,,
 8,,Epic,Accuracy and clean-up,Open issues found during testing and review.,To Do,future,,
-10,1,Task,Install the CP210x USB driver and the ESP32 Arduino core 3.0.7,"Driver installed 2026-10-16 (board on COM7). Core installed 2026-10-19 with resumable downloads, because GitHub release downloads fail on the hostel Wi-Fi.",Done,,,
-11,1,Story,Read the accelerometer at 100 Hz with gravity calibration,"Raw-register reads at 100 Hz over I2C at 100 kHz. Whenever the pod is still for a second, its reading is taken as 1 g (this clone reads about 1.15-1.19 g at rest).",Done,,,
-12,1,Story,Count steps and cadence,"A foot strike is a spike above STEP_G (1.8 g). The pod sees one foot, so steps = 2 x strikes.",Done,,,
-13,1,Story,Detect jumps and jump height from airtime,Airtime from below AIR_G (0.6 g) to a landing above LAND_G (1.5 g). Height = g x t^2 / 8.,Done,,,
-14,1,Story,Detect sprints,At least 180 steps/min at vigorous intensity for 3 s or more.,Done,,,
-15,1,Story,Track intensity and active / rest time,ENMO each second. Rest below 0.07 g with no foot strike; moderate from 0.15 g; vigorous from 0.60 g.,Done,,,
-16,1,Story,Start/stop sessions and keep the last one in flash,"BOOT button, serial 's' or the app. The finished session's summary survives a reboot. LED: blip every 2 s idle, 1 Hz blink recording.",Done,,,
-17,1,Story,Serial commands for debugging,"s = start/stop, l = live JSON, p = Serial Plotter mode, r = last session. 115200 baud.",Done,,,
-18,1,Task,Drop the BMP280 pressure sensor,It fell off the I2C bus after the motion tests. Elevation is now reported as off (baro = 0).,Done,,,
-20,2,Story,"Advertise as SockPod with Live, Session and Control characteristics",Live: read + notify. Session: read. Control: write 'start' or 'stop'. All values UTF-8 JSON.,Done,,,
-21,2,Story,Send live stats once a second in one notification,MTU 247 so the live JSON (up to about 150 bytes) fits one notification.,Done,,,
-22,2,Story,Start and stop sessions from the app,Control characteristic accepts 'start' and 'stop'; other values are ignored.,Done,,,
-30,3,Task,Write the guided motion test (motion_test.py),"Prompts through standing, walking, jogging, jumping, sprinting and seated tapping; saves a labelled 50 Hz trace.",Done,,,
-31,3,Story,Tune thresholds from two motion tests,"Second test: 61 s rest vs 63 s active, 0 false strikes from seated tapping, 4 of 5 jumps (9-33 cm), 1 sprint.",Done,,,
-40,4,Story,Connect over Web Bluetooth and show live stats,"Timer, active/rest, steps, cadence, intensity, jumps, sprints, elevation (Off on the real pod).",Done,,,
-41,4,Story,Start and stop a session from the app,Same as the pod's BOOT button.,Done,,,
-42,4,Story,Session history in the browser,"Each finished session is read from the pod and saved in localStorage. Details view, Export as JSON, Clear.",Done,,,
-43,4,Story,Demo mode,A simulated pod running a scripted one-minute workout.,Done,,,
-44,4,Story,Reconnect and browser checks,Retries for about 20 s after a dropout. Explains when Web Bluetooth is unavailable and offers the demo.,Done,,,
-50,5,Task,Put the project on GitHub,Public repo vaibhavraj-0906/sockpod. secrets.h and the vendor driver are git-ignored.,Done,,,
-51,5,Story,Publish the app to GitHub Pages over https,GitHub Actions workflow .github/workflows/pages.yml publishes frontend/ on every push to main that changes it.,Done,,,
-60,6,Task,Write the Bluetooth test script (ble_test.py),Black-box test of the GATT interface the app uses. 19 checks. Run: python ble_test.py,Done,,,
-101,6,Task,T01 Pod advertises as SockPod,"Steps: Scan for 15 s.
+9,1,Task,Install the CP210x USB driver and the ESP32 Arduino core 3.0.7,"Driver installed 2026-10-16 (board on COM7). Core installed 2026-10-19 with resumable downloads, because GitHub release downloads fail on the hostel Wi-Fi.",Done,,,
+10,1,Story,Read the accelerometer at 100 Hz with gravity calibration,"Raw-register reads at 100 Hz over I2C at 100 kHz. Whenever the pod is still for a second, its reading is taken as 1 g (this clone reads about 1.15-1.19 g at rest).",Done,,,
+11,1,Story,Count steps and cadence,"A foot strike is a spike above STEP_G (1.8 g). The pod sees one foot, so steps = 2 x strikes.",Done,,,
+12,1,Story,Detect jumps and jump height from airtime,Airtime from below AIR_G (0.6 g) to a landing above LAND_G (1.5 g). Height = g x t^2 / 8.,Done,,,
+13,1,Story,Detect sprints,At least 180 steps/min at vigorous intensity for 3 s or more.,Done,,,
+14,1,Story,Track intensity and active / rest time,ENMO each second. Rest below 0.07 g with no foot strike; moderate from 0.15 g; vigorous from 0.60 g.,Done,,,
+15,1,Story,Start/stop sessions and keep the last one in flash,"BOOT button, serial 's' or the app. The finished session's summary survives a reboot. LED: blip every 2 s idle, 1 Hz blink recording.",Done,,,
+16,1,Story,Serial commands for debugging,"s = start/stop, l = live JSON, p = Serial Plotter mode, r = last session. 115200 baud.",Done,,,
+17,1,Task,Drop the BMP280 pressure sensor,It fell off the I2C bus after the motion tests. Elevation is now reported as off (baro = 0).,Done,,,
+18,2,Story,"Advertise as SockPod with Live, Session and Control characteristics",Live: read + notify. Session: read. Control: write 'start' or 'stop'. All values UTF-8 JSON.,Done,,,
+19,2,Story,Send live stats once a second in one notification,MTU 247 so the live JSON (up to about 150 bytes) fits one notification.,Done,,,
+20,2,Story,Start and stop sessions from the app,Control characteristic accepts 'start' and 'stop'; other values are ignored.,Done,,,
+21,3,Task,Write the guided motion test (motion_test.py),"Prompts through standing, walking, jogging, jumping, sprinting and seated tapping; saves a labelled 50 Hz trace.",Done,,,
+22,3,Story,Tune thresholds from two motion tests,"Second test: 61 s rest vs 63 s active, 0 false strikes from seated tapping, 4 of 5 jumps (9-33 cm), 1 sprint.",Done,,,
+23,4,Story,Connect over Web Bluetooth and show live stats,"Timer, active/rest, steps, cadence, intensity, jumps, sprints, elevation (Off on the real pod).",Done,,,
+24,4,Story,Start and stop a session from the app,Same as the pod's BOOT button.,Done,,,
+25,4,Story,Session history in the browser,"Each finished session is read from the pod and saved in localStorage. Details view, Export as JSON, Clear.",Done,,,
+26,4,Story,Demo mode,A simulated pod running a scripted one-minute workout.,Done,,,
+27,4,Story,Reconnect and browser checks,Retries for about 20 s after a dropout. Explains when Web Bluetooth is unavailable and offers the demo.,Done,,,
+28,5,Task,Put the project on GitHub,Public repo vaibhavraj-0906/sockpod. secrets.h and the vendor driver are git-ignored.,Done,,,
+29,5,Story,Publish the app to GitHub Pages over https,GitHub Actions workflow .github/workflows/pages.yml publishes frontend/ on every push to main that changes it.,Done,,,
+30,6,Task,Write the Bluetooth test script (ble_test.py),Black-box test of the GATT interface the app uses. 19 checks. Run: python ble_test.py,Done,,,
+31,6,Task,T01 Pod advertises as SockPod,"Steps: Scan for 15 s.
 Expected: SockPod found.
 Actual: Found in 0.6 s.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-102,6,Task,T02 Connect over Bluetooth LE,"Steps: Connect to the pod.
+32,6,Task,T02 Connect over Bluetooth LE,"Steps: Connect to the pod.
 Expected: Connected.
 Actual: Connected.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-103,6,Task,T03 Service and three characteristics present,"Steps: List the SockPod service.
+33,6,Task,T03 Service and three characteristics present,"Steps: List the SockPod service.
 Expected: Live (read, notify), Session (read), Control (write).
 Actual: As expected.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-104,6,Task,T04 MTU large enough for live JSON,"Steps: Read the negotiated MTU.
+34,6,Task,T04 MTU large enough for live JSON,"Steps: Read the negotiated MTU.
 Expected: At least 200.
 Actual: 247.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-105,6,Task,T05 Session characteristic returns JSON,"Steps: Read Session.
+35,6,Task,T05 Session characteristic returns JSON,"Steps: Read Session.
 Expected: JSON with an id.
 Actual: Session 7.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-106,6,Task,T06 Live message has every documented field,"Steps: Read Live.
+36,6,Task,T06 Live message has every documented field,"Steps: Read Live.
 Expected: All 16 fields.
 Actual: All present.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-107,6,Task,T07 Elevation reported off,"Steps: Read Live.
+37,6,Task,T07 Elevation reported off,"Steps: Read Live.
 Expected: baro = 0 (BMP280 removed).
 Actual: baro = 0.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-108,6,Task,T08 Live notifications about once a second,"Steps: Subscribe for 6 s.
+38,6,Task,T08 Live notifications about once a second,"Steps: Subscribe for 6 s.
 Expected: A notification every 0.7-1.4 s.
 Actual: 6 in 6 s, gaps 0.96-1.03 s.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-109,6,Task,T09 Every notification is complete JSON,"Steps: Parse each notification.
+39,6,Task,T09 Every notification is complete JSON,"Steps: Parse each notification.
 Expected: All parse.
 Actual: 6 of 6; largest 147 bytes.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-110,6,Task,T10 'start' starts recording,"Steps: Write 'start'.
+40,6,Task,T10 'start' starts recording,"Steps: Write 'start'.
 Expected: rec = 1 within 2 s.
 Actual: rec = 1.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-111,6,Task,T11 Session timer counts up,"Steps: Watch t for 8 s.
+41,6,Task,T11 Session timer counts up,"Steps: Watch t for 8 s.
 Expected: t rises by 1 each second.
 Actual: t = 1 to 8.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-112,6,Task,T12 Still pod counts nothing and rests,"Steps: Leave the pod on the desk.
+42,6,Task,T12 Still pod counts nothing and rests,"Steps: Leave the pod on the desk.
 Expected: 0 steps, jumps, sprints; time counted as rest.
 Actual: 0 / 0 / 0; rest 8 s, active 0 s.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-113,6,Task,T13 'stop' stops recording,"Steps: Write 'stop'.
+43,6,Task,T13 'stop' stops recording,"Steps: Write 'stop'.
 Expected: rec = 0.
 Actual: rec = 0.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-114,6,Task,T14 Session ID goes up by one,"Steps: Compare 'last' before and after.
+44,6,Task,T14 Session ID goes up by one,"Steps: Compare 'last' before and after.
 Expected: +1.
 Actual: 7 to 8.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-115,6,Task,T15 Summary is the new session with all fields,"Steps: Read Session.
+45,6,Task,T15 Summary is the new session with all fields,"Steps: Read Session.
 Expected: id = new session, all 21 fields.
 Actual: id 8, all fields.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-116,6,Task,T16 Summary duration matches the wall clock,"Steps: Compare dur with elapsed time.
+46,6,Task,T16 Summary duration matches the wall clock,"Steps: Compare dur with elapsed time.
 Expected: Within 2 s.
 Actual: 8 s vs 8.2 s.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-117,6,Task,T17 Active + rest = duration,"Steps: Check the summary.
+47,6,Task,T17 Active + rest = duration,"Steps: Check the summary.
 Expected: Equal.
 Actual: 0 + 8 = 8.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-118,6,Task,T18 Unknown command is ignored,"Steps: Write 'jump'.
+48,6,Task,T18 Unknown command is ignored,"Steps: Write 'jump'.
 Expected: Still idle, ID unchanged, updates continue.
 Actual: As expected.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-119,6,Task,T19 Pod advertises again after a disconnect,"Steps: Disconnect, scan, reconnect, read Session.
+49,6,Task,T19 Pod advertises again after a disconnect,"Steps: Disconnect, scan, reconnect, read Session.
 Expected: Found again; session still readable.
 Actual: Reconnected in 4.6 s; session 8.
 Result: Passed (2026-10-20)",Done,test-case,bluetooth,passed
-201,6,Task,S01 Boot log after a reset,"Steps: python serial_tool.py COM7 --reset -s 8
+50,6,Task,S01 Boot log after a reset,"Steps: python serial_tool.py COM7 --reset -s 8
 Expected: Sensor found, BMP280 reported missing, calibration loaded, advertising.
 Actual: Sensor at 0x68 (WHO_AM_I 0x70), elevation off, 1.189 g calibration, advertising as SockPod.
 Result: Passed (2026-10-20)",Done,test-case,serial,passed
-202,6,Task,S02 Last session survives a reboot,"Steps: Send 'r' after the reset.
+51,6,Task,S02 Last session survives a reboot,"Steps: Send 'r' after the reset.
 Expected: Session 8 summary.
 Actual: Session 8 returned.
 Result: Passed (2026-10-20)",Done,test-case,serial,passed
-203,6,Task,S03 's' starts a session,"Steps: Send 's'.
+52,6,Task,S03 's' starts a session,"Steps: Send 's'.
 Expected: Session started.
 Actual: [SESSION] #9 started.
 Result: Passed (2026-10-20)",Done,test-case,serial,passed
-204,6,Task,S04 'l' prints live JSON once a second,"Steps: Send 'l' while recording.
+53,6,Task,S04 'l' prints live JSON once a second,"Steps: Send 'l' while recording.
 Expected: One JSON line a second, rec = 1.
 Actual: t = 6 to 9, rec = 1.
 Result: Passed (2026-10-20)",Done,test-case,serial,passed
-205,6,Task,S05 's' stops the session,"Steps: Send 's'.
+54,6,Task,S05 's' stops the session,"Steps: Send 's'.
 Expected: Session stopped, summary printed.
 Actual: #9 stopped after 9 s, summary printed.
 Result: Passed (2026-10-20)",Done,test-case,serial,passed
-206,6,Task,S06 'r' returns the new session,"Steps: Send 'r'.
+55,6,Task,S06 'r' returns the new session,"Steps: Send 'r'.
 Expected: Session 9 summary.
 Actual: Session 9 returned.
 Result: Passed (2026-10-20)",Done,test-case,serial,passed
-301,6,Task,D01 Hosted app loads over https,"Steps: Open https://vaibhavraj-0906.github.io/sockpod/
+56,6,Task,D01 Hosted app loads over https,"Steps: Open https://vaibhavraj-0906.github.io/sockpod/
 Expected: Secure page, Web Bluetooth available, no console errors.
 Actual: As expected.
 Result: Passed (2026-10-20)",Done,test-case,web-app,passed
-302,6,Task,D02 Demo connects,"Steps: Tap Try the demo.
+57,6,Task,D02 Demo connects,"Steps: Tap Try the demo.
 Expected: Status Demo, live view shown.
 Actual: As expected.
 Result: Passed (2026-10-20)",Done,test-case,web-app,passed
-303,6,Task,D03 Start and Stop,"Steps: Tap Start session, later Stop session.
+58,6,Task,D03 Start and Stop,"Steps: Tap Start session, later Stop session.
 Expected: Button shows Starting.../Stopping... and is disabled meanwhile.
 Actual: As expected.
 Result: Passed (2026-10-20)",Done,test-case,web-app,passed
-304,6,Task,D04 Live counts match the demo script,"Steps: Record for 51 s.
+59,6,Task,D04 Live counts match the demo script,"Steps: Record for 51 s.
 Expected: 96 steps, 4 jumps, 1 sprint; active + rest = timer.
 Actual: 96 / 4 / 1; 0:45 + 0:06 = 0:51.
 Result: Passed (2026-10-20)",Done,test-case,web-app,passed
-305,6,Task,D05 Finished session saved,"Steps: Stop at 1:10.
+60,6,Task,D05 Finished session saved,"Steps: Stop at 1:10.
 Expected: Session in the list with a Demo badge; light + moderate + vigorous = active.
 Actual: 1:10, 106 steps, 4 jumps, 1 sprint; 0 + 42 + 8 = 50 s active.
 Result: Passed (2026-10-20)",Done,test-case,web-app,passed
-306,6,Task,D06 Session details,"Steps: Tap the session.
+61,6,Task,D06 Session details,"Steps: Tap the session.
 Expected: Intensity bar and 10 facts.
 Actual: As expected.
 Result: Passed (2026-10-20)",Done,test-case,web-app,passed
-307,6,Task,D07 Export,"Steps: Tap Export.
+62,6,Task,D07 Export,"Steps: Tap Export.
 Expected: sockpod-sessions.json with the saved sessions.
 Actual: As expected.
 Result: Passed (2026-10-20)",Done,test-case,web-app,passed
-308,6,Task,D08 History survives a reload,"Steps: Reload, run a second demo session.
+63,6,Task,D08 History survives a reload,"Steps: Reload, run a second demo session.
 Expected: Sessions kept; next session gets the next ID.
 Actual: Kept; second session got ID 2.
 Result: Passed (2026-10-20)",Done,test-case,web-app,passed
-309,6,Task,D09 Clear asks first,"Steps: Tap Clear, Cancel; then Clear, OK.
+64,6,Task,D09 Clear asks first,"Steps: Tap Clear, Cancel; then Clear, OK.
 Expected: Cancel keeps sessions; OK deletes them.
 Actual: As expected.
 Result: Passed (2026-10-20)",Done,test-case,web-app,passed
-310,6,Task,D10 Disconnect and phone layout,"Steps: Tap Disconnect; view at 375 px width.
+65,6,Task,D10 Disconnect and phone layout,"Steps: Tap Disconnect; view at 375 px width.
 Expected: Back to the connect screen; no sideways scrolling.
 Actual: As expected.
 Result: Passed (2026-10-20)",Done,test-case,web-app,passed
-311,6,Task,W01 Real pod with the app in Chrome on Windows,"Steps: Connect the pod, watch live stats, Start/Stop.
+66,6,Task,W01 Real pod with the app in Chrome on Windows,"Steps: Connect the pod, watch live stats, Start/Stop.
 Expected: Live stats update; finished session syncs into history.
 Actual: As expected.
 Result: Passed (2026-10-19)",Done,test-case,web-app,passed
-70,7,Story,Connect the pod from Chrome on Android,"Open the hosted app in Chrome on Android, turn Bluetooth on, allow Nearby devices (Location on Android 11 and older), tap Connect SockPod and pick SockPod. Expect live stats.",To Do,future,,
-71,7,Story,Start/Stop and Sessions on the phone,Start and stop a session from the phone and check it appears under Sessions.,To Do,future,,
-80,8,Story,Real-world motion test outdoors on battery,"Walk, run, jump and sprint without the USB cable, then re-tune STEP_G and the intensity levels.",To Do,future,,
-81,8,Story,Replace the clone motion sensor,Fit a genuine MPU-6050 or MPU-6500 and use the gyroscope to reject seated foot-tapping.,To Do,future,,
-82,8,Task,Decide on elevation,"Rewire the BMP280, or remove elevation from the README and the demo.",To Do,future,,
-83,8,Story,Keep several sessions on the pod,"Only the most recent session is stored, so one is lost if the app isn't connected before the next.",To Do,future,,
-84,8,Bug,Stale serial output after the Bluetooth test,"The first serial read after ble_test.py returned about 2,000 repeated old lines ([BLE] App disconnected, reset banners). A reboot straight after was clean. Likely the USB serial driver; watch for it.",To Do,serial,,
-85,8,Bug,Demo mode shows elevation,The real pod reports elevation off (baro = 0) but the demo still sends baro = 1.,To Do,web-app,,
-86,8,Task,Update README sections that still describe the BMP280,"Features, Hardware and Status still describe the BMP280 as fitted.",To Do,docs,,
+67,7,Story,Connect the pod from Chrome on Android,"Open the hosted app in Chrome on Android, turn Bluetooth on, allow Nearby devices (Location on Android 11 and older), tap Connect SockPod and pick SockPod. Expect live stats.",To Do,future,,
+68,7,Story,Start/Stop and Sessions on the phone,Start and stop a session from the phone and check it appears under Sessions.,To Do,future,,
+69,8,Story,Real-world motion test outdoors on battery,"Walk, run, jump and sprint without the USB cable, then re-tune STEP_G and the intensity levels.",To Do,future,,
+70,8,Story,Replace the clone motion sensor,Fit a genuine MPU-6050 or MPU-6500 and use the gyroscope to reject seated foot-tapping.,To Do,future,,
+71,8,Task,Decide on elevation,"Rewire the BMP280, or remove elevation from the README and the demo.",To Do,future,,
+72,8,Story,Keep several sessions on the pod,"Only the most recent session is stored, so one is lost if the app isn't connected before the next.",To Do,future,,
+73,8,Bug,Stale serial output after the Bluetooth test,"The first serial read after ble_test.py returned about 2,000 repeated old lines ([BLE] App disconnected, reset banners). A reboot straight after was clean. Likely the USB serial driver; watch for it.",To Do,serial,,
+74,8,Bug,Demo mode shows elevation,The real pod reports elevation off (baro = 0) but the demo still sends baro = 1.,To Do,web-app,,
+75,8,Task,Update README sections that still describe the BMP280,"Features, Hardware and Status still describe the BMP280 as fitted.",To Do,docs,,
