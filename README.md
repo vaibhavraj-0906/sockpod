@@ -134,12 +134,10 @@ plain HTML, CSS and JavaScript with no build step or packages.
   jumps, sprints and elevation. **Export** downloads them all as JSON.
 - **Demo mode:** a simulated pod for trying the app, or presenting it, without hardware.
 
-**On a phone or any computer:** open <https://vaibhavraj-0906.github.io/sockpod/>
-in **Chrome** and tap **Connect SockPod**. On Android, Bluetooth must be on, and
-Chrome needs the Nearby devices permission (Location on Android 11 and older),
-or the device chooser stays empty.
+**Hosted copy:** <https://vaibhavraj-0906.github.io/sockpod/>. Open it in
+**Chrome or Edge** on the laptop and click **Connect SockPod**.
 
-**On this laptop, from the local files:**
+**From the local files on this laptop:**
 
 ```bash
 python -m http.server 8000 --directory frontend
@@ -151,7 +149,13 @@ Then open <http://localhost:8000> in **Chrome or Edge** and click **Connect Sock
   Android and ChromeOS. It doesn't work in iPhone/iPad browsers or Firefox; the
   app says so and offers the demo.
 - **Secure page needed:** the browser only allows Bluetooth on `https://` pages
-  or on `localhost`, which is why the phone uses the hosted copy.
+  or on `localhost`. That's why the app is hosted on GitHub Pages.
+- **One pod, one session:** the pod keeps only its most recent finished
+  session. Connect the app before starting the next one, or the previous one is lost.
+- **Phones: planned for a future update.** The hosted copy loads in Chrome on
+  Android, but connecting the pod from a phone hasn't been tested yet. When it
+  is: Bluetooth must be on, and Chrome needs the Nearby devices permission
+  (Location on Android 11 and older), or the device chooser stays empty.
 
 **Updating the hosted copy:** GitHub Pages serves `frontend/` from the
 [sockpod repo](https://github.com/vaibhavraj-0906/sockpod). Every push to `main`
@@ -165,9 +169,7 @@ git push
 ```
 
 To republish without a change, run the workflow from the **Actions** tab or with
-`gh workflow run pages.yml`. If the phone still shows the old version, reload the page.
-- **One pod, one session:** the pod keeps only its most recent finished
-  session. Connect the app before starting the next one, or the previous one is lost.
+`gh workflow run pages.yml`. If the browser still shows the old version, reload the page.
 
 ## Tuning
 
@@ -203,6 +205,60 @@ labelled, along with the pod's own session summary.
 - **Jumps:** 4 of 5 detected (9–33 cm).
 - **Sprints:** 1 detected.
 
+## Testing
+
+Run on 2026-10-20 with the pod still on a desk, USB plugged in, and the app
+loaded from the hosted copy.
+
+**Pod over Bluetooth** (`python ble_test.py`, 19 of 19 passed). It uses the same
+GATT interface as the app:
+
+- Advertises as `SockPod` (found in 0.6 s), with the service and the Live,
+  Session and Control characteristics and their documented properties.
+- MTU negotiated to 247. Live notifications came every 0.96–1.03 s, each one
+  complete JSON (up to 147 bytes) with every documented field.
+- `start` and `stop` started and stopped recording within a second, and the
+  session ID went from 7 to 8.
+- The session summary had every field, its duration matched the wall clock
+  (8 s against 8.2 s), and active + rest = duration.
+- Lying still, the pod counted 0 steps, jumps and sprints, and all 8 s as rest.
+- An unknown command (`jump`) was ignored.
+- After disconnecting, the pod advertised again; it reconnected in 4.6 s with
+  the summary still there. Elevation reported off (`baro` 0).
+
+**Pod over USB serial** (`serial_tool.py`): the boot log found the motion sensor
+at 0x68, reported the BMP280 missing (elevation off), loaded the saved
+calibration and started advertising. Session 8 was still readable after a reboot.
+`s` started and stopped session 9, `l` printed live JSON once a second, and `r`
+returned session 9's summary.
+
+**Hosted app, demo mode** (desktop width and 375 px phone width):
+
+- Loads over https with no console errors, and Web Bluetooth is available.
+- Start/Stop work; the button shows Starting…/Stopping… and is disabled meanwhile.
+- During a 70 s demo session the live counts matched the demo script (96 steps,
+  4 jumps and 1 sprint at 51 s), and active + rest equalled the timer.
+- The finished session appeared under Sessions with a Demo badge. Its details
+  show the intensity bar and all ten facts, and light + moderate + vigorous
+  equals active time.
+- Export produced `sockpod-sessions.json` with the saved sessions.
+- Sessions survived a page reload, and the next demo session got the next ID.
+- Clear: Cancel keeps the sessions, OK deletes them. Disconnect returns to the
+  connect screen. No sideways scrolling at phone width.
+
+On 2026-10-19 the app was also checked with the real pod in Chrome on Windows:
+live stats, Start/Stop, and finished sessions syncing into history.
+
+**Not tested:** connecting from an Android phone (planned for a future update),
+and real running and jumping (see [Known limitations](#known-limitations)).
+
+**Seen during testing:**
+- The first serial read after the Bluetooth test returned about 2,000 repeated
+  old lines (`[BLE] App disconnected` and reset banners). A reboot straight
+  after was clean, so it looks like the USB serial driver replaying buffered
+  output rather than the firmware, but it's worth watching for.
+- Demo mode still shows elevation, while the real pod now reports it as off.
+
 ## Known limitations
 
 - **Tested on the spot only.** Both tests were done with the USB cable plugged
@@ -228,6 +284,7 @@ labelled, along with the pod's own session summary.
 SockPod/SockPod.ino    firmware
 serial_tool.py         talk to the board over USB serial without an interactive monitor
 motion_test.py         guided motion test for tuning the thresholds
+ble_test.py            checks the pod's Bluetooth interface (see Testing)
 motion_logs/           recordings from the motion tests
 frontend/              the SockPod web app (index.html, app.js, ble.js, demo.js, styles.css)
 .github/workflows/     publishes frontend/ to GitHub Pages
@@ -276,6 +333,8 @@ python serial_tool.py COM7 --reset -s 10
   and checked with two guided tests. See [Tuning](#tuning) and [Known limitations](#known-limitations).
 - **Not tested yet:** real running and jumping without the cable, and elevation.
 - **App:** works with the real pod in Chrome on Windows: live stats, Start/Stop
-  from the app, and finished sessions syncing into history. Also tested in demo
-  mode, including the phone layout. Not yet tried on an Android phone, which
-  needs the app hosted over https.
+  from the app, and finished sessions syncing into history. Hosted at
+  <https://vaibhavraj-0906.github.io/sockpod/> and tested there in demo mode,
+  including the phone layout. See [Testing](#testing).
+- **Future update:** using the app from an Android phone.
+- **Project tracking:** Jira (project link to be added).
