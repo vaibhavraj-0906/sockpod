@@ -1,10 +1,12 @@
 # SockPod
 
 A small pod that clips to your sock and tracks how you move: steps, cadence,
-jumps, sprints and elevation. It sends live stats and session summaries to the
-SockPod app over Bluetooth LE.
+jumps, sprints and how hard you're working. It sends live stats and session
+summaries to the SockPod app over Bluetooth LE.
 
-Built on an ESP32 with an MPU-6050 motion sensor and a BMP280 pressure sensor.
+Built on an ESP32 with an MPU-6050-class motion sensor. A BMP280 pressure sensor
+for elevation was fitted at first but has been removed (see [Hardware](#hardware)),
+so the pod currently reports elevation as off.
 
 ## Features
 
@@ -14,7 +16,7 @@ Built on an ESP32 with an MPU-6050 motion sensor and a BMP280 pressure sensor.
 | Steps and cadence | Step count, and steps per minute while walking or running | MPU-6050: each foot strike is an acceleration spike. The pod sits on one foot, so it sees every other step and doubles the count |
 | Jumps | Jump count, highest and average jump | MPU-6050: the foot reads about 0 g while in the air. Height comes from airtime, `h = g·t² / 8` (0.5 s in the air ≈ 31 cm). Reasonably accurate if you land the way you took off |
 | Sprints | Number of sprints, total and longest sprint time | Cadence of at least 180 steps/min with vigorous intensity for at least 3 s in a row |
-| Elevation change | Metres climbed and descended | BMP280 air pressure, relative to the start of the session. Changes under 1 m are ignored as noise, which suits hills, stairs and slopes but is too coarse for jump height. That's why the MPU-6050 handles jumps |
+| Elevation change (off for now) | Metres climbed and descended | Needs a BMP280 pressure sensor, which isn't fitted at the moment, so the pod reports elevation as off. With one fitted: air pressure relative to the start of the session, ignoring changes under 1 m as noise. That suits hills, stairs and slopes but is too coarse for jump height, which is why the MPU-6050 handles jumps |
 | Wireless sync | Live stats and session summaries in the SockPod app | ESP32 built-in Bluetooth LE |
 
 The thresholds behind these (in the `TUNING` block of `SockPod.ino`) are
@@ -26,20 +28,24 @@ starting points, not measured values. See [Tuning](#tuning).
   Silicon Labs CP210x driver on Windows (download it from Silicon Labs; the
   laptop has a copy in `CP210x_Universal_Windows_Driver/`, which isn't in git).
 - MPU-6050 (GY-521) accelerometer + gyroscope
-- BMP280 pressure sensor (optional: without it, elevation reads 0)
+- BMP280 pressure sensor: **not fitted at the moment.** It dropped off the I2C
+  bus after the motion tests on 2026-10-19 and was removed. The firmware still
+  looks for one at boot, so it can be wired back in; without it, elevation
+  reports as off (`baro` 0).
 
-Both sensors share the ESP32's I2C bus:
+The motion sensor is on the ESP32's I2C bus (a refitted BMP280 shares the same
+four wires):
 
 | Sensor pin | ESP32 |
 |---|---|
-| VCC (both) | 3V3 |
-| GND (both) | GND |
-| SDA (both) | GPIO21 |
-| SCL (both) | GPIO22 |
+| VCC | 3V3 |
+| GND | GND |
+| SDA | GPIO21 |
+| SCL | GPIO22 |
 
 - MPU-6050 address `0x68` (AD0 unconnected).
-- BMP280 address `0x76` if SDO goes to GND, `0x77` if it goes to 3V3. The
-  firmware tries both and prints every I2C address it finds at boot.
+- If a BMP280 is refitted: address `0x76` if SDO goes to GND, `0x77` if it goes
+  to 3V3. The firmware tries both and prints every I2C address it finds at boot.
 
 ## Using it
 
@@ -55,7 +61,7 @@ Serial commands at 115200 baud:
 |---|---|
 | `s` | Start / stop a session |
 | `l` | Print live stats as JSON once a second (on / off) |
-| `p` | Serial Plotter mode: acceleration, rotation and altitude (on / off) |
+| `p` | Serial Plotter mode: acceleration, rotation and altitude (on / off; altitude stays 0 without a BMP280) |
 | `r` | Print the last finished session as JSON |
 
 ## Bluetooth LE interface (for the app)
@@ -95,7 +101,7 @@ or the last one when idle):
 | `spr` | Sprints this session |
 | `up`, `dn` | Metres climbed and descended this session |
 | `alt` | Altitude relative to the session start, m |
-| `baro` | 1 if the BMP280 is working, 0 if elevation is off |
+| `baro` | 1 if a BMP280 is fitted and working, 0 if elevation is off (as on the current pod) |
 | `last` | ID of the newest session. When it changes, read the Session characteristic |
 
 **Session**:
@@ -119,7 +125,7 @@ or the last one when idle):
 | `jumps`, `jump_max`, `jump_avg` | Jump count, highest and average height, cm |
 | `sprints`, `sprint_s`, `sprint_max` | Sprint count, total sprint time and longest sprint, s |
 | `up`, `dn` | Metres climbed and descended |
-| `baro` | 1 if the BMP280 was working, 0 if elevation wasn't measured |
+| `baro` | 1 if a BMP280 was working, 0 if elevation wasn't measured (as on the current pod) |
 
 ## The app
 
@@ -127,7 +133,8 @@ or the last one when idle):
 plain HTML, CSS and JavaScript with no build step or packages.
 
 - **Live view:** session timer, active and rest time, steps, cadence, intensity,
-  jumps, sprints and elevation, updated every second.
+  jumps, sprints and elevation, updated every second. Elevation shows Off while
+  no BMP280 is fitted.
 - **Start / Stop:** controls the pod's session, the same as the BOOT button.
 - **History:** each finished session is fetched from the pod and saved in the
   browser (`localStorage`). Tap a session for its intensity breakdown, cadence,
@@ -272,9 +279,11 @@ and real running and jumping (see [Known limitations](#known-limitations)).
   and the pod measures what this board reads at rest (1.14–1.16 g) and treats it
   as 1 g. A genuine MPU-6050 or MPU-6500 module would allow rotation-based features.
 - **Small jumps aren't counted.** Anything under about 8 cm (250 ms in the air) is ignored.
-- **Elevation hasn't been tested** on stairs or a hill.
-- **The BMP280 is only looked for at boot.** If its wiring is loose at power-up,
-  elevation stays off until the next reboot.
+- **No elevation at the moment.** The BMP280 was removed after it dropped off the
+  I2C bus, and elevation was never tested on stairs or a hill. Whether to refit
+  it or drop the feature is still open.
+- **A refitted BMP280 is only looked for at boot.** If its wiring is loose at
+  power-up, elevation stays off until the next reboot.
 - **I2C runs at 100 kHz.** At 400 kHz the MPU-6050 stopped answering with
   longer wires to the foot.
 
@@ -325,14 +334,16 @@ python serial_tool.py COM7 --reset -s 10
 
 - **Firmware:** compiles cleanly on esp32:esp32 3.0.7 (89% of app flash) and
   runs on the board.
-- **Tested so far:** both sensors detected (MPU-6050 at 0x68, BMP280 at 0x76).
+- **Tested so far:** the motion sensor is detected at 0x68. The BMP280 was first
+  detected at 0x76, then dropped off the bus and was removed, so elevation is off.
   Gravity calibration works (this MPU-6050 reads 1.148 g at rest, scaled to 1.00 g).
   Sessions start and stop from serial and from Bluetooth, and survive a reboot. Over
   Bluetooth from a Windows laptop, the MTU negotiated to 247, live notifications
   arrived complete, and the session summary read back in full.
 - **Motion tested on the spot:** steps, jumps, sprints and intensity were tuned
   and checked with two guided tests. See [Tuning](#tuning) and [Known limitations](#known-limitations).
-- **Not tested yet:** real running and jumping without the cable, and elevation.
+- **Not tested yet:** real running and jumping without the cable. Elevation is
+  off until a BMP280 is refitted.
 - **App:** works with the real pod in Chrome on Windows: live stats, Start/Stop
   from the app, and finished sessions syncing into history. Hosted at
   <https://vaibhavraj-0906.github.io/sockpod/> and tested there in demo mode,
